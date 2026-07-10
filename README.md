@@ -24,7 +24,7 @@ Baseado no plugin de [Helio Arreche](https://github.com/ArrecheNeto/PROSPECTOR-D
 ## Instalação rápida (Cursor)
 
 ```bash
-git clone <este-repositorio>
+git clone git@github.com:lucasgpaixao/PROSPECTOR-DE-SITES.git
 cp -r cursor-skills/* ~/.cursor/skills/
 ```
 
