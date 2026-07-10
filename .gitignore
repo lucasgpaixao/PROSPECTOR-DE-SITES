@@ -1,0 +1,4 @@
+.DS_Store
+*.swp
+prospector-data/
+prospector-config.json
