@@ -1,43 +1,39 @@
 ---
 name: deploy-hostinger
-description: Esta skill deve ser usada ao publicar páginas na hospedagem Hostinger — upload via FTP/hPanel, criação de pastas por cliente, verificação da URL pública e fallback pelo navegador. Acione quando o usuário disser "publicar", "subir o site", "colocar no ar", "deploy", "hostinger" ou rodar /publicar ou o teste de conexão do /setup.
+description: Esta skill deve ser usada ao publicar páginas na hospedagem Hostinger — upload via script local automático, FTP ou hPanel, criação de pastas por cliente, verificação da URL pública e HTTPS. Acione quando o usuário disser "publicar", "subir o site", "colocar no ar", "deploy", "hostinger" ou rodar /publicar ou o teste de conexão do /setup.
 ---
 
 # Deploy na Hostinger
 
-Publicar cada página do cliente em `public_html/[pastaBase]/[slug]/index.html`, acessível em `https://[dominio]/[pastaBase]/[slug]/`.
+Publicar páginas em `public_html/[pastaBase]/[slug]/` e garantir a URL pública `https://[dominio]/[pastaBase]/[slug]/` funcionando.
 
-Credenciais: ler de `prospector-config.json` → `"hostinger"` (usuário, domínio, servidor, senha FTP/hPanel). Dados no hPanel: **Sites** → **Gerenciar** → **Arquivos** → **Contas FTP**. Se faltarem usuário/domínio/servidor, pedir ao usuário. Se faltar a senha, NUNCA pedir no chat: instruir o usuário a preenchê-la diretamente no campo `"senha"` do `prospector-config.json`. Ao usar a senha em comandos, leia-a do arquivo dentro do próprio comando — nunca exibi-la em saídas ou logs.
+## Credenciais
 
-## Método 1 — FTP programático (tentar primeiro)
+Tudo vem de `prospector-config.json` (bloco `hostinger`): `usuario`, `dominio`, `servidor`, `senha`, `pastaBase` (padrão `clientes`). **A senha vive SÓ nesse arquivo, no computador do usuário — nunca é digitada no chat, nunca é exibida em nenhuma saída, log ou comando mostrado ao usuário.** Se a senha estiver vazia, oriente o usuário: dashboard → aba Configurações → Conexão Hostinger → colar a senha e salvar (ou editar o arquivo na mão). Nunca pelo chat.
 
-O host FTP normalmente é `ftp.[dominio]` ou o hostname do hPanel. Via bash:
+## Método 1 — Publicador automático local (RECOMENDADO: instala uma vez, nunca mais clica)
 
-```bash
-curl -sS --ftp-create-dirs -T index.html \
-  "ftp://ftp.DOMINIO/public_html/clientes/SLUG/index.html" \
-  --user "USUARIO:SENHA"
-```
+A rede do sandbox do Cowork NÃO alcança FTP nem hPanel — isso vale para todo usuário. A publicação roda na máquina do usuário via um publicador instalado no agendador do Windows: a cada minuto ele verifica a fila e sobe o que houver, escondido, lendo as credenciais do config. O usuário instala UMA vez e o /publicar vira 100% automático.
 
-- Testar também com o valor de `servidor` do config como host se `ftp.[dominio]` falhar.
-- `--ftp-create-dirs` cria as pastas automaticamente.
-- Se houver imagens locais ou preview, enviar da mesma forma.
-- IMPORTANTE: não expor a senha em mensagens ao usuário; nos logs, mascarar.
+1. **Garanta os 4 arquivos na pasta conectada** (copie de `references/` desta skill, sobrescrevendo versões antigas): `publicar-agora.ps1`, `publicar-agora.bat`, `publicador-oculto.vbs` e `instalar-publicador.bat`.
+2. **Primeira vez**: peça UM duplo clique no `instalar-publicador.bat` (cria a tarefa "ProspectorPublicador" no Windows). Se der erro de permissão: botão direito → Executar como administrador. Isso acontece só uma vez na vida.
+3. **Monte a fila**: escreva `fila-publicacao.txt` na raiz da pasta conectada, uma linha por arquivo: `caminho/local/arquivo.html|public_html/[pastaBase]/[slug]/index.html`. Inclua página (`index.html`) e capa (`proposta.html`) de cada cliente. Em até 1 minuto o publicador sobe tudo sozinho e renomeia a fila para `fila-publicada-[data].txt` (o log fica em `publicador-log.txt`).
+4. **Aguarde ~90s e verifique**: confira se a fila foi renomeada e teste as URLs (verificação abaixo). Sem tarefa instalada, o fallback manual é o duplo clique no `publicar-agora.bat`.
 
-## Método 2 — fallback pelo navegador (se o FTP falhar)
+## Método 2 — FTP direto do sandbox (tentar primeiro, silencioso)
 
-Usar o Claude in Chrome:
+Antes de acionar o usuário, tente publicar você mesmo: `curl -sS --connect-timeout 15 -T [arquivo] "ftp://[servidor]/public_html/[pastaBase]/[slug]/index.html" --user "[usuario]:[senha do config]" --ftp-create-dirs` (senha lida do arquivo via script — jamais mostrada). Se funcionar, ótimo: zero ação do usuário. Se a rede do sandbox bloquear (timeout/refused), caia SEM DRAMA para o Método 1 — não insista em tentativas repetidas.
 
-1. Navegar para `https://hpanel.hostinger.com` — se pedir login, pedir para o usuário logar (não digitar a senha dele no navegador sem autorização explícita).
-2. Abrir **Gerenciador de arquivos** → `public_html/[pastaBase]/` → criar pasta `[slug]` → Upload do `index.html`.
-3. Como o arquivo está na pasta conectada do usuário, o upload via navegador usa o arquivo real do computador dele — indicar o caminho na janela de seleção.
+## Método 3 — Navegador (último recurso)
 
-## Verificação (sempre)
+Se os métodos 1 e 2 falharem (ex.: curl.exe ausente no Windows do usuário): hPanel Gerenciador de arquivos pelo Claude in Chrome — o USUÁRIO faz o login dele (nunca peça a senha no chat), você navega, cria as pastas e faz upload pela interface.
 
-Após o upload, buscar `https://[dominio]/[pastaBase]/[slug]/` e confirmar HTTP 200 + conteúdo correto (título do cliente presente). Se 404, checar: propagação, caminho da pasta, permissões (644 para arquivos, 755 para pastas).
+## Verificação (obrigatória, após qualquer método)
 
-## Organização
+1. Abra `https://[dominio]/[pastaBase]/[slug]/` e a capa `.../proposta.html` — confirme que carregam com conteúdo certo.
+2. **HTTPS obrigatório**: precisa carregar com cadeado válido. Se der erro de certificado: Hostinger tem SSL grátis — guie: hPanel → **SSL** → marcar o domínio → **Run AutoSSL** (minutos). Enquanto o HTTPS não valida, a publicação NÃO está concluída — link `http://` NUNCA vai para cliente.
+3. Atualize `leads.md` + dashboard com status `publicado` e a URL.
 
-- 1 pasta por cliente, slug em kebab-case sem acentos (ex.: `jessica-nutri`).
-- Nunca sobrescrever a pasta de outro cliente.
-- Página de teste do setup: `public_html/[pastaBase]/teste/index.html` com um "Funcionou!" simples.
+## Teste de conexão do /setup
+
+Publique `teste.html` simples ("Funcionou!") em `public_html/[pastaBase]/teste/index.html` pelo Método 2; se bloqueado, já deixe os scripts do Método 1 copiados na pasta, monte a fila com o teste e peça os 2 cliques — assim o usuário aprende o fluxo logo no setup.

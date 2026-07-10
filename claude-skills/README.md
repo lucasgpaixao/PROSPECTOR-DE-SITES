@@ -1,41 +1,36 @@
 # Prospector de Sites — Claude Skills
 
-Plugin para **Claude** (Cowork / Claude Code) que roda o ciclo completo de prospecção e venda de sites:
+Plugin para **Claude** (Cowork / Claude Code) v0.13.5 — ciclo completo de prospecção e venda de sites.
 
-**Achou → Refez → Publicou → Ofertou.**
+**Achou → Refez → Publicou → Ofertou** (+ respostas, follow-up, contrato)
 
-1. `/setup` — configura assinatura, nichos e Hostinger (roda uma vez)
-2. `/prospectar` — varre o Google Maps atrás de negócios bem avaliados (nota ≥ 4.7) com site ruim e e-mail público
-3. `/redesenhar` — recria as páginas com estética premium, editor visual e comparador antes/depois
-4. `/editor` — edita textos e imagens no navegador e exporta a versão final
-5. `/publicar` — sobe as páginas na Hostinger e devolve as URLs públicas
-6. `/proposta` — escreve o e-mail de proposta (rapport real, sem preço) e cria rascunho no Gmail
+## Comandos
 
-## Como instalar
+| Comando | Função |
+|---------|--------|
+| `/setup` | Configuração inicial + dashboard + publicador |
+| `/prospectar` | Busca leads no Google Maps |
+| `/redesenhar` | Redesign premium (mín. 5 leads) |
+| `/editor` | Editor visual no navegador |
+| `/publicar` | Deploy Hostinger + página-capa |
+| `/proposta` | E-mail anti-spam com link da capa |
+| `/respostas` | Verifica respostas no Gmail |
+| `/followup` | Follow-up após 3+ dias |
+| `/contrato` | Contrato HTML + DOCX |
 
-No Claude Code:
+## Instalação
 
 ```
 /plugin marketplace add lucasgpaixao/PROSPECTOR-DE-SITES
 /plugin install prospector-de-sites@prospector-plugins
 ```
 
-No Claude Cowork (desktop): Configurações → Plugins → Adicionar marketplace → cole a URL do repositório → instale o **prospector-de-sites**.
-
 ## Requisitos
 
-- Claude Cowork (ou Claude Code) com extensão Claude in Chrome conectada
-- Conector do Gmail e do Google Drive
-- Uma pasta conectada no Cowork (config, leads e sites ficam nela)
-- Hospedagem Hostinger com acesso ao hPanel/FTP
-
-## Onde ficam os dados
-
-Tudo na pasta conectada: `prospector-config.json`, `leads.md`, `sites/[slug]/` e `comparar.html`.
-
-## Segurança
-
-A senha FTP nunca é digitada no chat: preencha o campo `"senha"` em `prospector-config.json` localmente.
+- Claude in Chrome, Gmail, Google Drive
+- Pasta conectada no Cowork
+- Hostinger com hPanel/FTP
+- Python no Windows (dashboard + publicador)
 
 ---
 

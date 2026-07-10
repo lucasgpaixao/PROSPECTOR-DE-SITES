@@ -1,74 +1,58 @@
 ---
 name: prospeccao-maps
-description: >-
-  Prospecta clientes no Google Maps — busca negócios bem avaliados com sites
-  ruins, qualifica leads e monta planilha. Use quando o usuário disser
-  "prospectar", "buscar clientes", "achar leads", "clientes com site ruim"
-  ou rodar o workflow prospectar do prospector de sites.
+description: Esta skill deve ser usada ao prospectar clientes no Google Maps — buscar negócios bem avaliados com sites ruins, qualificar leads, avaliar qualidade de sites de terceiros e montar a planilha de leads. Acione quando o usuário disser "prospectar", "buscar clientes", "achar leads", "clientes com site ruim" ou rodar /prospectar.
 ---
 
 # Prospecção no Google Maps
 
-Encontrar negócios com boa reputação mas presença digital fraca. O contraste entre nota alta e site ruim É o argumento de venda.
+Encontrar o cliente ouro: negócio que JÁ fatura bem (nota alta, muitas avaliações) mas perde clientes por causa de um site fraco. Não se cria demanda — conserta-se onde o dinheiro está escapando.
 
-## Ferramentas (Cursor)
+## Fluxo (via MCP `cursor-ide-browser`)
 
-Use o MCP **cursor-ide-browser**:
+1. Abrir `https://www.google.com/maps` e buscar `[nicho] em [cidade]`.
+2. Percorrer os resultados um a um, em ordem. Para cada estabelecimento:
+   - Abrir o perfil e ler nota, nº de avaliações e link do site.
+   - **Filtro 1 — potencial financeiro**: nota ≥ 4.7 E avaliações ≥ 40. Reprovou → próximo.
+   - **Filtro 2 — TEM site**: o lead PRECISA ter um site ativo e acessível — a oferta é "uma versão muito melhor do SEU site", e o conteúdo/fotos vêm de lá. Sem site, site fora do ar ou "site" que é só diretório de terceiros/linktree → descartar (registrar o motivo) e seguir.
+   - **Filtro 3 — site ruim**: abrir o site em nova aba e avaliar pelos critérios abaixo. Site bom → descartar. Site ativo porém ruim → candidato (falta só o e-mail).
+3. Parar ao atingir a meta de leads qualificados (config, padrão 10) ou após avaliar 25 estabelecimentos.
+4. Pular estabelecimentos que já estão em `leads.md` (avaliados em buscas anteriores).
 
-- `browser_navigate` — abrir Maps e sites
-- `browser_snapshot` — ler painéis e resultados
-- `browser_click` — selecionar estabelecimentos
-- `browser_scroll` — percorrer resultados e lazy-load
-- `browser_cdp` → `Runtime.evaluate` — extrair e-mails via regex no HTML
-- `browser_take_screenshot` — capturas de referência
+## Critérios de site ruim (guardar o motivo específico)
 
-## O perfil do lead ideal
+Qualifica como lead se o site (ativo) tiver 2 ou mais destes problemas:
 
-- Nota **≥ 4.7** com **≥ 40 avaliações**
-- **Site próprio ATIVO, mas ruim** — requisito eliminatório
-- **E-mail público** — requisito eliminatório
-- Nichos: profissionais liberais (nutricionistas, psicólogos, advogados, psiquiatras, dentistas, fisioterapeutas)
+- Layout datado (aparência de template de 10+ anos, fontes de sistema, imagens esticadas/pixeladas)
+- Sem CTA claro de agendamento/contato (nenhum botão de WhatsApp ou agenda visível na primeira dobra)
+- Domínio gratuito ou hospedado em plataforma alheia (Google Sites, Wix grátis, subdomínio de terceiros com marca da plataforma)
+- Não responsivo (quebra no mobile)
+- Conteúdo desorganizado: serviços escondidos, sem hierarquia, texto corrido sem seções
+- Sem prova social (nenhuma avaliação/depoimento, apesar da nota alta no Google)
 
-## Os 3 filtros eliminatórios (nesta ordem)
+O motivo anotado deve ser objetivo e verificável — ele será citado na proposta. Ex.: "domínio redireciona para Google Sites gratuito, template básico, sem CTA de agendamento".
 
-1. **Sem site próprio → PULA.** Não conta: Instagram/Facebook, WhatsApp, Doctoralia, iFood, Linktree, site fora do ar.
-2. **Site BOM → PULA.** Moderno, responsivo, bem estruturado.
-3. **Sem e-mail público → PULA.** Busque no perfil Maps, site (contato, rodapé) e via JavaScript.
+## Coleta por lead
 
-## Fluxo de execução
+Nome, nota, nº de avaliações, telefone, WhatsApp, e-mail, URL do site, motivo.
 
-1. `browser_navigate` → `https://www.google.com/maps/search/[nicho]+em+[cidade]`
-2. Percorrer resultados, abrindo painel de cada estabelecimento
-3. Anotar nota e avaliações; corte ≥ 4.7 / ≥ 40
-4. Verificar site no perfil; Filtro 1
-5. Abrir site em nova aba; avaliar qualidade; Filtro 2
-6. Caçar e-mail; Filtro 3
-7. Coletar: nome, nota, avaliações, telefone/WhatsApp, e-mail, URL, motivo do site ruim, 2-3 trechos de avaliações reais
-8. Repetir até meta de leads ou 25 estabelecimentos
+**WHATSAPP: capture SEMPRE, separado do telefone.** Fontes, na ordem: botão/link de WhatsApp no site do lead (procure `wa.me/`, `api.whatsapp.com` ou ícone de WhatsApp — extraia o número do link); telefone celular do perfil do Maps (números com 9º dígito são celular no Brasil — assuma WhatsApp). Registre no formato internacional `55 + DDD + número` (ex.: `5511999990000`), pronto pra `wa.me`. O WhatsApp alimenta os botões do dashboard e o plano B de abordagem quando o e-mail não responde.
 
-## Como avaliar qualidade do site
+**E-MAIL É OBRIGATÓRIO.** A proposta vai por e-mail — lead sem e-mail público não fecha o ciclo. Procure nesta ordem: site (rodapé e página de contato), links `mailto:`, home do site da clínica onde atende, busca no Google por "[nome] + email/contato". Se NÃO encontrar e-mail: **descarte o lead, registre na lista de descartados (com o contato que existir, ex. WhatsApp/Instagram) e continue buscando o próximo** até bater a meta. Atenção: "site" que aponta para diretório de terceiros (localtreino, acheioprofissional etc.) não conta como site próprio — descarta pelo Filtro 2.
 
-Site RUIM apresenta 2+ destes sinais:
+## Saída — Google Sheets + leads.md local
 
-- Não responsivo
-- Design datado
-- Sem hierarquia visual
-- Sem CTA claro na primeira dobra
-- Lento/pesado
-- Conteúdo abandonado (copyright antigo, links quebrados)
-- Template genérico mal preenchido
+Destino principal: PLANILHA DO GOOGLE (via `leads.csv` local (importar no Sheets manualmente): `create_file` com CSV em `textContent` e `contentMimeType: text/csv` — converte automaticamente para Sheets). Título `Leads Prospector — [nicho] [cidade]`; incluir qualificados e descartados, ranqueados por potencial (nota alta + site pior). Entregar o link ao usuário.
 
-Registrar motivo específico e verificável — vira argumento do e-mail.
+Cópia de trabalho local `leads.md` (mesmas colunas) para controle de status, já que o conector do Drive não edita células:
 
-## Saída
+```markdown
+| # | Nome | Nota | Aval. | E-mail | Telefone | Site atual | Motivo | Status | URL nova |
+```
 
-1. **`leads.md`** na pasta de trabalho: todos avaliados, ranqueados por potencial. Colunas: #, Nome, Nota, Avaliações, E-mail, Telefone, Site atual, Motivo, Situação, Status, URL nova.
-2. **`leads.csv`**: mesmos dados para importação no Google Sheets.
+Status possíveis: `novo`, `redesenhado`, `publicado`, `proposta enviada`. Quando um status mudar (redesenhar/publicar/proposta), regenerar a planilha do Google com os dados acumulados e atualizar o `dashboard.html` (skill `dashboard-leads`). Nunca sobrescrever leads antigos — apenas acrescentar e atualizar.
 
 ## Boas práticas
 
-- Nunca reavaliar estabelecimento já em `leads.md`
-- Rodadas novas somam na mesma lista, nunca duplicar
-- Não coletar dados além do necessário para a proposta
-- Fechar abas após cada análise
-- Se poucos resultados, sugerir nicho alternativo ou cidade vizinha
+- Trabalhar por região dá vantagem: menos concorrência na oferta e conhecimento local.
+- Enquanto o navegador trabalha, não interromper o fluxo com perguntas — só reportar a tabela final.
+- Se o Google Maps pedir login/captcha, pausar e avisar o usuário.

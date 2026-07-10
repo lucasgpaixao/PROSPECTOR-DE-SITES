@@ -1,62 +1,44 @@
 ---
 name: deploy-hostinger
-description: >-
-  Publica páginas na hospedagem Hostinger — upload via FTP/hPanel, pastas por
-  cliente e verificação de URL. Use quando o usuário disser "publicar", "subir
-  site", "deploy", "hostinger" ou rodar publicar/setup do prospector de sites.
+description: Esta skill deve ser usada ao publicar páginas na hospedagem Hostinger — upload via script local automático, FTP ou hPanel, criação de pastas por cliente, verificação da URL pública e HTTPS. Acione quando o usuário disser "publicar", "subir o site", "colocar no ar", "deploy", "hostinger" ou rodar /publicar ou o teste de conexão do /setup.
 ---
 
 # Deploy na Hostinger
 
-Publicar em `public_html/[pastaBase]/[slug]/index.html` → `https://[dominio]/[pastaBase]/[slug]/`.
+Publicar páginas em `public_html/[pastaBase]/[slug]/` e garantir a URL pública `https://[dominio]/[pastaBase]/[slug]/` funcionando.
 
-Credenciais em `prospector-config.json` → `"hostinger"`. Senha NUNCA no chat — usuário preenche no arquivo. Ao usar em comandos, leia do arquivo sem exibir em saídas.
+## Credenciais
 
-Dados no hPanel: **Sites** → **Gerenciar** → **Arquivos** → **Contas FTP** (usuário, host e porta).
+Tudo vem de `prospector-config.json` (bloco `hostinger`): `usuario`, `dominio`, `servidor`, `senha`, `pastaBase` (padrão `clientes`). **A senha vive SÓ nesse arquivo, no computador do usuário — nunca é digitada no chat, nunca é exibida em nenhuma saída, log ou comando mostrado ao usuário.** Se a senha estiver vazia, oriente o usuário: dashboard → aba Configurações → Conexão Hostinger → colar a senha e salvar (ou editar o arquivo na mão). Nunca pelo chat.
 
-## Método 1 — FTP programático (tentar primeiro)
+## Método 1 — Publicador automático local (RECOMENDADO: instala uma vez, nunca mais clica)
 
-Host FTP comum: `ftp.[dominio]` ou o hostname exibido no hPanel.
+A rede do sandbox do Cursor NÃO alcança FTP nem hPanel — isso vale para todo usuário. A publicação roda na máquina do usuário via um publicador instalado no agendador do Windows: a cada minuto ele verifica a fila e sobe o que houver, escondido, lendo as credenciais do config. O usuário instala UMA vez e o /publicar vira 100% automático.
 
-```bash
-curl -sS --ftp-create-dirs -T index.html \
-  "ftp://ftp.DOMINIO/public_html/clientes/SLUG/index.html" \
-  --user "USUARIO:SENHA"
-```
+1. **Garanta os 4 arquivos na pasta de trabalho (`prospector-data/`)** (copie de `references/` desta skill, sobrescrevendo versões antigas): `publicar-agora.ps1`, `publicar-agora.bat`, `publicador-oculto.vbs` e `instalar-publicador.bat`.
+2. **Primeira vez**: peça UM duplo clique no `instalar-publicador.bat` (cria a tarefa "ProspectorPublicador" no Windows). Se der erro de permissão: botão direito → Executar como administrador. Isso acontece só uma vez na vida.
+3. **Monte a fila**: escreva `fila-publicacao.txt` na raiz da pasta de trabalho (`prospector-data/`), uma linha por arquivo: `caminho/local/arquivo.html|public_html/[pastaBase]/[slug]/index.html`. Inclua página (`index.html`) e capa (`proposta.html`) de cada cliente. Em até 1 minuto o publicador sobe tudo sozinho e renomeia a fila para `fila-publicada-[data].txt` (o log fica em `publicador-log.txt`).
+4. **Aguarde ~90s e verifique**: confira se a fila foi renomeada e teste as URLs (verificação abaixo). Sem tarefa instalada, o fallback manual é o duplo clique no `publicar-agora.bat`.
 
-- Testar também com `servidor` do config se `ftp.[dominio]` falhar
-- Porta padrão 21; se o hPanel indicar outra porta, use `--ftp-port`
-- `--ftp-create-dirs` cria as pastas automaticamente
-- Mascarar senha em logs
+## Método 2 — FTP direto do sandbox (tentar primeiro, silencioso)
 
-## Método 2 — MCP Hostinger (deploy de pasta zipada)
+Antes de acionar o usuário, tente publicar você mesmo: `curl -sS --connect-timeout 15 -T [arquivo] "ftp://[servidor]/public_html/[pastaBase]/[slug]/index.html" --user "[usuario]:[senha do config]" --ftp-create-dirs` (senha lida do arquivo via script — jamais mostrada). Se funcionar, ótimo: zero ação do usuário. Se a rede do sandbox bloquear (timeout/refused), caia SEM DRAMA para o Método 1 — não insista em tentativas repetidas.
 
-Se o MCP **user-hostinger-hosting** estiver configurado, empacote a pasta do cliente e publique:
+## Método 3 — Browser Cursor (último recurso)
 
-```bash
-cd prospector-data/sites/SLUG
-zip -r ../SLUG_$(date +%Y%m%d_%H%M%S).zip .
-```
+Se os métodos 1 e 2 falharem (ex.: curl.exe ausente no Windows do usuário): hPanel Gerenciador de arquivos via MCP `cursor-ide-browser` — o USUÁRIO faz o login dele (nunca peça a senha no chat), você navega, cria as pastas e faz upload pela interface.
 
-Chame `hosting_deployStaticWebsite` com `domain` do config e `archivePath` do zip.
+## Verificação (obrigatória, após qualquer método)
 
-> Este método publica o conteúdo do zip na raiz do domínio. Para manter a estrutura `clientes/[slug]/`, prefira FTP (Método 1).
+1. Abra `https://[dominio]/[pastaBase]/[slug]/` e a capa `.../proposta.html` — confirme que carregam com conteúdo certo.
+2. **HTTPS obrigatório**: precisa carregar com cadeado válido. Se der erro de certificado: Hostinger tem SSL grátis — guie: hPanel → **SSL** → ativar para o domínio. Enquanto o HTTPS não valida, a publicação NÃO está concluída — link `http://` NUNCA vai para cliente.
+3. Atualize `leads.md` + dashboard com status `publicado` e a URL.
 
-## Método 3 — fallback pelo browser (Cursor)
+## Teste de conexão do /setup
 
-MCP **cursor-ide-browser**:
+Publique `teste.html` simples ("Funcionou!") em `public_html/[pastaBase]/teste/index.html` pelo Método 2; se bloqueado, já deixe os scripts do Método 1 copiados na pasta, monte a fila com o teste e peça os 2 cliques — assim o usuário aprende o fluxo logo no setup.
 
-1. `browser_navigate` → `https://hpanel.hostinger.com` (hPanel)
-2. Se pedir login, peça ao usuário logar (não digite senha sem autorização)
-3. **Arquivos** → **Gerenciador de arquivos** → `public_html/[pastaBase]/` → criar pasta `[slug]` → Upload do `index.html`
-4. O arquivo está no workspace — indicar caminho na janela de seleção
 
-## Verificação (sempre)
+## Método 4 — MCP Hostinger
 
-Após upload: `browser_navigate` ou `curl` em `https://[dominio]/[pastaBase]/[slug]/`. Confirmar HTTP 200 e título do cliente. Se 404: checar caminho e permissões (644 arquivos, 755 pastas).
-
-## Organização
-
-- 1 pasta por cliente, slug kebab-case sem acentos
-- Nunca sobrescrever pasta de outro cliente
-- Teste do setup: `public_html/[pastaBase]/teste/index.html` com "Funcionou!"
+Se o MCP **user-hostinger-hosting** estiver configurado, use `hosting_deployStaticWebsite` com zip da pasta do cliente (ver skill completa).

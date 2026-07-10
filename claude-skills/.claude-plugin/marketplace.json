@@ -4,18 +4,18 @@
     "name": "Lucas Paixão"
   },
   "metadata": {
-    "description": "Plugins de IA do Lucas Paixão",
-    "version": "1.0.0"
+    "description": "Plugins de IA para negócios do Lucas Paixão",
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "prospector-de-sites",
       "source": "./prospector-de-sites",
-      "description": "Prospecção semi-automática: encontra negócios bem avaliados com sites ruins no Google Maps, redesenha as páginas com estética premium (com editor visual), publica na Hostinger e cria a proposta por e-mail no Gmail. Leads salvos em planilha do Google Sheets.",
+      "description": "Prospecção semi-automática com CRM local: encontra negócios bem avaliados com sites ruins no Google Maps, redesenha as páginas com estética premium (editor visual + comparador antes/depois), publica na Hostinger sozinho (publicador automático + HTTPS), envia proposta anti-spam com página-capa personalizada via Gmail, faz follow-up, lê as respostas e gera contrato em Word travado — tudo administrado num dashboard local com kanban e financeiro. Comece pelo /setup.",
       "author": {
         "name": "Lucas Paixão"
       },
-      "keywords": ["prospeccao", "landing-page", "redesign", "hostinger", "google-maps", "gmail"]
+      "keywords": ["prospeccao", "landing-page", "redesign", "hostinger", "google-maps", "gmail", "crm", "dashboard"]
     }
   ]
 }
