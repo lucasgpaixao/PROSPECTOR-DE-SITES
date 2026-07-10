@@ -37,4 +37,4 @@ Antes de encerrar, para cada página criada: renderize/revise o HTML procurando 
 
 ## Saída
 
-Apresente os arquivos criados ao usuário (páginas + editores + `comparar.html`) com um resumo de 1 linha por cliente (o que melhorou). Oriente: abrir `comparar.html` para ver antes/depois lado a lado, `[slug]-editor.html` para editar. Sugira `/publicar` para subir na HostGator.
+Apresente os arquivos criados ao usuário (páginas + editores + `comparar.html`) com um resumo de 1 linha por cliente (o que melhorou). Oriente: abrir `comparar.html` para ver antes/depois lado a lado, `[slug]-editor.html` para editar. Sugira `/publicar` para subir na Hostinger.

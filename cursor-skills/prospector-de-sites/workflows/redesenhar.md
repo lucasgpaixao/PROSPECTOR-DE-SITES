@@ -30,4 +30,4 @@ Para cada página: textos placeholder, links quebrados, seções vazias, contras
 
 ## Saída
 
-Resumo de 1 linha por cliente. Oriente: abrir `comparar.html` para antes/depois, `[slug]-editor.html` para editar. Sugira publicar na HostGator.
+Resumo de 1 linha por cliente. Oriente: abrir `comparar.html` para antes/depois, `[slug]-editor.html` para editar. Sugira publicar na Hostinger.

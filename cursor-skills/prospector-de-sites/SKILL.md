@@ -2,9 +2,9 @@
 name: prospector-de-sites
 description: >-
   Prospecção semi-automática de clientes com sites ruins: acha negócios no
-  Google Maps, redesenha páginas premium, publica na HostGator e envia proposta
+  Google Maps, redesenha páginas premium, publica na Hostinger e envia proposta
   por e-mail. Use quando o usuário disser "prospector", "prospectar", "redesenhar
-  site do cliente", "publicar na hostgator", "proposta de site", "setup prospector"
+  site do cliente", "publicar na hostinger", "proposta de site", "setup prospector"
   ou mencionar o ciclo achou → refez → publicou → ofertou.
 ---
 
@@ -24,7 +24,7 @@ Não há slash commands como no Claude. Peça ao agente em linguagem natural:
 | Prospectar | "Prospectar nutricionistas em São Paulo" |
 | Redesenhar | "Redesenhar os 5 melhores leads" |
 | Editor | "Abrir editor do cliente jessica-nutri" |
-| Publicar | "Publicar todos os sites na HostGator" |
+| Publicar | "Publicar todos os sites na Hostinger" |
 | Proposta | "Enviar proposta para todos os publicados" |
 
 O agente deve ler o workflow correspondente em [workflows/](workflows/) e a skill de domínio indicada.
@@ -59,19 +59,19 @@ Se o workspace não tiver pasta definida, pergunte ao usuário onde salvar e reg
 
 ## Workflows
 
-1. **[setup](workflows/setup.md)** — configura assinatura, nichos e HostGator (roda uma vez)
+1. **[setup](workflows/setup.md)** — configura assinatura, nichos e Hostinger (roda uma vez)
 2. **[prospectar](workflows/prospectar.md)** — busca leads no Maps → skill `prospeccao-maps`
 3. **[redesenhar](workflows/redesenhar.md)** — redesign premium → skill `redesign-premium`
 4. **[editor](workflows/editor.md)** — gera versão editável no navegador
-5. **[publicar](workflows/publicar.md)** — deploy HostGator → skill `deploy-hostgator`
+5. **[publicar](workflows/publicar.md)** — deploy Hostinger → skill `deploy-hostinger`
 6. **[proposta](workflows/proposta.md)** — e-mail de proposta → skill `proposta-email`
 
 ## Requisitos
 
-- MCP **cursor-ide-browser** habilitado (prospecção no Maps, extração de sites, fallback cPanel)
-- Hospedagem **HostGator** com acesso ao cPanel (ou preencher deploy manualmente)
+- MCP **cursor-ide-browser** habilitado (prospecção no Maps, extração de sites, fallback hPanel)
+- Hospedagem **Hostinger** com acesso ao hPanel/FTP (ou preencher deploy manualmente)
 - Conta **Gmail** para rascunhos de proposta (via browser)
 
 ## Segurança
 
-A senha do cPanel **nunca** é digitada no chat. O usuário preenche `"senha"` em `prospector-config.json` localmente.
+A senha FTP **nunca** é digitada no chat. O usuário preenche `"senha"` em `prospector-config.json` localmente.

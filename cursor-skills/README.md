@@ -30,7 +30,7 @@ Reinicie o Cursor ou abra um novo chat para o agente detectar as skills.
 | `prospector-de-sites` | Hub principal — orquestra os 6 workflows |
 | `prospeccao-maps` | Busca e qualificação no Google Maps |
 | `redesign-premium` | Redesign premium + editor visual + comparador |
-| `deploy-hostgator` | Publicação FTP/cPanel na HostGator |
+| `deploy-hostinger` | Publicação FTP/cPanel na Hostinger |
 | `proposta-email` | E-mail de proposta comercial (sem preço) |
 
 ---
@@ -50,7 +50,7 @@ flowchart LR
 
 ### 1. Setup (uma vez)
 
-Configura assinatura, nichos padrão, cidade e credenciais da HostGator.
+Configura assinatura, nichos padrão, cidade e credenciais da Hostinger.
 
 **Prompt:**
 ```
@@ -59,7 +59,7 @@ Rode o setup do prospector de sites
 
 **Gera:** `prospector-config.json`
 
-> ⚠️ A senha do cPanel **nunca** vai no chat — preencher manualmente no JSON.
+> ⚠️ A senha FTP **nunca** vai no chat — preencher manualmente no JSON.
 
 ---
 
@@ -116,11 +116,11 @@ Abrir editor do cliente jessica-nutri
 
 ### 5. Publicar
 
-Sobe as páginas na HostGator via FTP ou cPanel.
+Sobe as páginas na Hostinger via FTP ou cPanel.
 
 **Prompt:**
 ```
-Publicar todos os sites na HostGator
+Publicar todos os sites na Hostinger
 ```
 
 **URL pública:** `https://[dominio]/clientes/[slug]/`
@@ -150,7 +150,7 @@ Enviar proposta para todos os publicados
 
 ```
 prospector-data/
-├── prospector-config.json    # Config + credenciais HostGator
+├── prospector-config.json    # Config + credenciais Hostinger
 ├── leads.md                  # Pipeline de leads (status)
 ├── leads.csv                 # Export para Google Sheets
 ├── comparar.html             # Comparador antes/depois
@@ -172,7 +172,7 @@ novo → redesenhado → publicado → proposta enviada
 ## Requisitos
 
 - [ ] MCP **cursor-ide-browser** habilitado no Cursor
-- [ ] Hospedagem **HostGator** com cPanel
+- [ ] Hospedagem **Hostinger** com cPanel
 - [ ] Conta **Gmail** para rascunhos
 - [ ] Workspace aberto com pasta `prospector-data/`
 
@@ -205,8 +205,8 @@ novo → redesenhado → publicado → proposta enviada
 
 ## Segurança
 
-A senha do cPanel nunca é digitada no chat: preencha o campo `"senha"` em `prospector-config.json` localmente.
+A senha FTP nunca é digitada no chat: preencha o campo `"senha"` em `prospector-config.json` localmente.
 
 ---
 
-Criado por [Helio Arreche](https://github.com/ArrecheNeto) · Adaptado para Cursor
+Lucas Paixão

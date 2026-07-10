@@ -2,7 +2,7 @@
 
 Prospecção semi-automática de clientes com sites ruins: acha, redesenha, publica e oferta.
 
-Baseado no plugin de [Helio Arreche](https://github.com/ArrecheNeto/PROSPECTOR-DE-SITES), com versões para **Cursor** e **Claude**.
+Versões para **Cursor** e **Claude** do fluxo de prospecção e venda de sites.
 
 ## Estrutura
 
@@ -18,7 +18,7 @@ Baseado no plugin de [Helio Arreche](https://github.com/ArrecheNeto/PROSPECTOR-D
 1. Setup — configuração inicial
 2. Prospectar — busca leads no Google Maps
 3. Redesenhar — páginas premium com editor e comparador
-4. Publicar — deploy na HostGator
+4. Publicar — deploy na Hostinger
 5. Proposta — e-mail comercial (sem preço)
 
 ## Instalação rápida (Cursor)
@@ -37,4 +37,4 @@ cp -r cursor-skills/* ~/.cursor/skills/
 
 ---
 
-Fork/adaptação privada · Original por [Helio Arreche](https://github.com/ArrecheNeto)
+Lucas Paixão
