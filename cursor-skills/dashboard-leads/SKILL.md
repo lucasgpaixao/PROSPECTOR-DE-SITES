@@ -1,6 +1,6 @@
 ---
 name: dashboard-leads
-description: Esta skill deve ser usada para criar e ATUALIZAR o dashboard de leads — o painel de controle local (SQLite + página web) onde o usuário administra prospecções, sites, publicações e propostas. Acione sempre que qualquer comando do plugin mudar dados de leads (/prospectar, /redesenhar, /publicar, /proposta), ou quando o usuário disser "dashboard", "painel", "meus leads", "controle de clientes", "banco de dados de leads".
+description: Esta skill deve ser usada para criar e ATUALIZAR o dashboard de leads — o painel de controle local (SQLite + página web) onde o usuário administra prospecções, sites, publicações e propostas. Acione sempre que qualquer comando do plugin mudar dados de leads (/prospectar, /redesenhar, /criar-site, /publicar, /proposta), ou quando o usuário disser "dashboard", "painel", "meus leads", "controle de clientes", "banco de dados de leads".
 ---
 
 # Dashboard de leads (SQLite + página local)
@@ -23,14 +23,14 @@ Arquitetura na RAIZ da pasta de trabalho (`prospector-data/`):
 ```sql
 CREATE TABLE IF NOT EXISTS leads(
   slug TEXT PRIMARY KEY, nome TEXT, nicho TEXT, cidade TEXT, nota REAL, avaliacoes INTEGER,
-  email TEXT, telefone TEXT, whatsapp TEXT, siteAntigo TEXT, motivo TEXT,
-  status TEXT DEFAULT 'novo', urlNova TEXT, dataProposta TEXT, valor REAL, obs TEXT,
+  email TEXT, telefone TEXT, whatsapp TEXT, siteAntigo TEXT, motivo TEXT, tipo TEXT DEFAULT 'redesign',
+  status TEXT DEFAULT 'novo', urlNova TEXT, dataProposta TEXT, whatsappProposta TEXT, valor REAL, obs TEXT,
   contratoStatus TEXT DEFAULT 'pendente', contratoEm TEXT, manutencao REAL, pago INTEGER DEFAULT 0,
   docCliente TEXT, endCliente TEXT,
   atualizado TEXT DEFAULT (datetime('now','localtime')));
 ```
 
-Status: `novo | redesenhado | publicado | proposta | respondeu | fechado | descartado`. `slug` é a chave.
+Status: `novo | redesenhado | publicado | proposta | respondeu | fechado | descartado`. `tipo`: `redesign` (tem site, passa por `/redesenhar`) ou `criacao` (sem site, passa por `/criar-site` — `siteAntigo` fica vazio). `dataProposta` = quando o e-mail foi enviado/rascunhado; `whatsappProposta` = quando a mensagem de WhatsApp foi deixada pronta/enviada (os dois são independentes — um lead pode ter só um dos dois preenchidos). `slug` é a chave. Se o banco já existir de uma versão anterior sem as colunas `tipo`/`whatsappProposta`, rode `ALTER TABLE leads ADD COLUMN tipo TEXT DEFAULT 'redesign'` e `ALTER TABLE leads ADD COLUMN whatsappProposta TEXT` antes do primeiro upsert (SQLite ignora erro se a coluna já existir — trate com try/except).
 
 ## Como os comandos atualizam (SEMPRE os 2 passos)
 
@@ -43,8 +43,8 @@ c.execute("INSERT INTO leads (slug,nome,status,...) VALUES (?,?,?,...) ON CONFLI
 c.commit()
 EOF
 ```
-   - `/prospectar` → insere leads (`novo`) e descartados (`descartado`, motivo em `obs`). NUNCA sobrescreva um lead cujo status já avançou.
-   - `/redesenhar` → `status='redesenhado'` · `/publicar` → `status='publicado'`, `urlNova` · `/proposta` → `status='proposta'`, `dataProposta`.
+   - `/prospectar` → insere leads (`novo`, `tipo='redesign'` ou `'criacao'` conforme tiver site) e descartados (`descartado`, motivo em `obs`). NUNCA sobrescreva um lead cujo status já avançou.
+   - `/redesenhar` (tipo redesign) ou `/criar-site` (tipo criacao) → `status='redesenhado'` · `/publicar` → `status='publicado'`, `urlNova` · `/proposta` → `status='proposta'`, `dataProposta` (se e-mail) e/ou `whatsappProposta` (se WhatsApp) · `/followup` → `obs` += "Follow-up enviado em [data]".
    - Usuário conta que respondeu/fechou → `status='respondeu'|'fechado'`, `valor` (+ `manutencao` se houver mensalidade).
    - `/contrato` → `contratoStatus='enviado'` + `contratoEm`. Cliente assinou → `contratoStatus='assinado'`. Pagamento recebido → `pago=1`.
 2. **Regenerar o snapshot**: leia todos os leads do banco e regrave `dashboard.html` do template com o JSON embutido atualizado (`{"atualizado": "...", "leads": [...]}`) — é o fallback para quem abre sem servidor.

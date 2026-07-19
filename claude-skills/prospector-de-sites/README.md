@@ -1,17 +1,18 @@
 # Prospector de Sites
 
-Prospecção semi-automática de clientes com sites ruins: acha, redesenha, publica e oferta.
+Prospecção semi-automática de clientes com sites ruins (ou sem site): acha, redesenha ou cria do zero, publica e oferta.
 
 ## O ciclo
 
 1. `/setup` — roda uma vez: assinatura, nichos padrão, dados do hPanel da Hostinger (com teste de publicação).
-2. `/prospectar [nicho] [cidade]` — busca no Google Maps negócios nota ≥ 4.7 com site fraco e gera `leads.md` com e-mail, motivo e ranking (padrão: 10 leads).
-3. `/redesenhar` — recria as páginas dos 5+ melhores leads com estética premium, mantendo o conteúdo, logo e paleta reais do cliente.
+2. `/prospectar [nicho] [cidade]` — busca no Google Maps negócios nota ≥ 4.7 com site fraco OU sem site e gera `leads.md` com e-mail, tipo (redesign/criação), motivo e ranking (padrão: 10 leads).
+3. `/redesenhar` — recria as páginas dos 5+ melhores leads (que já têm site) com estética premium, mantendo o conteúdo, logo e paleta reais do cliente.
+3b. `/criar-site` — gera do zero as páginas dos leads sem site próprio, usando fotos e avaliações reais do perfil do Google Maps (mesma qualidade e mesma entrega do `/redesenhar`).
 4. `/editor [cliente]` — gera versão editável no navegador (textos e imagens) com exportação da página final.
-5. `/publicar [cliente|todos]` — sobe na Hostinger em `dominio.com/clientes/[slug]/`, gera a página-capa de apresentação (antes/depois personalizado, `proposta.html`) e só conclui com HTTPS validado.
-6. `/proposta [cliente|todos]` — escreve o e-mail (rapport, sem preço), passa pela checklist anti-spam e cria o rascunho no Gmail com a página-capa como único link.
-7. `/respostas` — verifica no Gmail quem respondeu e atualiza o dashboard sozinho (dica: agende a verificação diária).
-8. `/followup [cliente]` — 3+ dias sem resposta? Gera o follow-up gentil (1 por lead, nunca repete) já checando quem respondeu antes.
+5. `/publicar [cliente|todos]` — sobe na Hostinger em `dominio.com/clientes/[slug]/`, gera a página-capa de apresentação (antes/depois para redesign, ou lançamento para site novo — `proposta.html`) e só conclui com HTTPS validado.
+6. `/proposta [cliente|todos]` — escreve a proposta (rapport, sem preço) e envia nos dois canais disponíveis: e-mail (rascunho no Gmail, passa pela checklist anti-spam) e WhatsApp (mensagem pronta no WhatsApp Web para você revisar e clicar em enviar) — mesma página-capa como único link nos dois.
+7. `/respostas` — verifica no Gmail quem respondeu e atualiza o dashboard sozinho (dica: agende a verificação diária). Respostas por WhatsApp você confere direto e informa ao Claude.
+8. `/followup [cliente]` — 3+ dias sem resposta em nenhum canal? Gera o follow-up gentil por e-mail e/ou WhatsApp (1 por lead, nunca repete) já checando quem respondeu antes.
 9. `/contrato [cliente]` — cliente fechou? Gera a minuta do contrato (pronta pra PDF) com os dados do negócio e deixa o rascunho no Gmail.
 
 ## Manual e publicação automática
@@ -24,7 +25,7 @@ O plugin mantém um painel de controle na sua pasta: `prospector.db` (banco SQLi
 
 ## Requisitos
 
-- Extensão Claude in Chrome conectada (prospecção no Maps e fallback de deploy)
+- Extensão Claude in Chrome conectada (prospecção no Maps, fallback de deploy e envio pelo WhatsApp Web — a primeira mensagem pede para você escanear o QR code)
 - Conector do Gmail (rascunhos de proposta)
 - Pasta conectada no Cowork (armazena config, leads e sites)
 - Hospedagem Hostinger com acesso ao hPanel

@@ -5,7 +5,7 @@ Redesenhe as páginas dos leads seguindo a skill `redesign-premium`. Ela é obri
 ## Seleção dos clientes
 
 1. Leia `prospector-config.json` e `leads.md` na pasta de trabalho (`prospector-data/`).
-2. Se `argumentos do usuário` trouxer URLs ou nomes, use-os. Senão, selecione os leads com status `novo` mais bem ranqueados — **mínimo de 5 clientes por lote** (se houver menos de 5 leads novos, use todos e avise que rodar `prospectar` de novo aumenta o lote).
+2. Se `argumentos do usuário` trouxer URLs ou nomes, use-os (confirme que são `tipo: redesign`; se algum lead for `tipo: criacao` — sem site próprio — avise e sugira `criar-site` pra ele). Senão, selecione os leads `tipo: redesign` com status `novo` mais bem ranqueados — **mínimo de 5 clientes por lote** (se houver menos de 5 leads novos, use todos e avise que rodar `prospectar` de novo aumenta o lote).
 3. Confirme a lista com o usuário antes de começar.
 
 ## Para cada cliente do lote
@@ -14,7 +14,7 @@ Redesenhe as páginas dos leads seguindo a skill `redesign-premium`. Ela é obri
 2. **Redesign**: aplique a skill `redesign-premium` na íntegra. Regra de ouro: NADA inventado — é uma nova versão da página do cliente, não uma página nova. O logo original e as fotos originais DEVEM aparecer na página nova (se o cliente não tem site/logo, use composição tipográfica — nunca invente logo).
 3. **Salvar** na pasta de trabalho (`prospector-data/`), com o nome do cliente no arquivo para fácil identificação:
    - `sites/[slug]/[slug].html` — a página final (arquivo único, autocontido, responsivo)
-   - `sites/[slug]/[slug]-editor.html` — a MESMA página com a camada de edição visual injetada antes de `</body>` (script completo em `referenceseditor-visual.md` da skill `redesign-premium`). Gere SEMPRE, sem esperar o usuário pedir.
+   - `sites/[slug]/[slug]-editor.html` — a MESMA página com a camada de edição visual injetada antes de `</body>` (script completo em `references/editor-visual.md` da skill `redesign-premium`). Gere SEMPRE, sem esperar o usuário pedir.
 4. **Comparador (OBRIGATÓRIO — não é opcional)**: crie/atualize `comparar.html` na RAIZ da pasta de trabalho (`prospector-data/`) usando o template pronto `references/comparador-template.html` da skill `redesign-premium`: copie o template, substitua `__CLIENTES__` pelo array JSON dos clientes (formato documentado no rodapé do próprio template). Se `comparar.html` já existir, LEIA o array atual e acrescente os novos clientes no topo — nunca perca os antigos.
 5. **Atualizar** o status do lead em `leads.md` para `redesenhado` e o `dashboard.html` (skill `dashboard-leads`): `status: redesenhado`.
 

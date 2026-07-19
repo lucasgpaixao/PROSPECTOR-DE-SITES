@@ -8,7 +8,7 @@ Redesenhe as páginas dos leads seguindo a skill `redesign-premium`. Ela é obri
 ## Seleção dos clientes
 
 1. Leia `prospector-config.json` e `leads.md` na pasta conectada.
-2. Se `$ARGUMENTS` trouxer URLs ou nomes, use-os. Senão, selecione os leads com status `novo` mais bem ranqueados — **mínimo de 5 clientes por lote** (se houver menos de 5 leads novos, use todos e avise que rodar `/prospectar` de novo aumenta o lote).
+2. Se `$ARGUMENTS` trouxer URLs ou nomes, use-os (confirme que são `tipo: redesign`; se algum lead for `tipo: criacao` — sem site próprio — avise e sugira `/criar-site` pra ele). Senão, selecione os leads `tipo: redesign` com status `novo` mais bem ranqueados — **mínimo de 5 clientes por lote** (se houver menos de 5 leads novos, use todos e avise que rodar `/prospectar` de novo aumenta o lote).
 3. Confirme a lista com o usuário antes de começar.
 
 ## Para cada cliente do lote

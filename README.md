@@ -1,8 +1,8 @@
 # Prospector de Sites
 
-Prospecção semi-automática de clientes com sites ruins: acha, redesenha, publica e oferta.
+Prospecção semi-automática de clientes com sites ruins ou sem site: acha, redesenha (ou cria do zero), publica e oferta.
 
-Versão **0.13.5** — com CRM local, página-capa, follow-up, respostas e contrato.
+Versão **0.15.0** — com CRM local, página-capa, proposta por e-mail e WhatsApp, follow-up, respostas e contrato.
 
 ## Estrutura
 
@@ -13,15 +13,15 @@ Versão **0.13.5** — com CRM local, página-capa, follow-up, respostas e contr
 
 ## Ciclo
 
-**Achou → Refez → Publicou → Ofertou**
+**Achou → Refez (ou criou do zero) → Publicou → Ofertou**
 
 1. Setup — configuração + dashboard + publicador
-2. Prospectar — Google Maps
-3. Redesenhar — páginas premium
+2. Prospectar — Google Maps (site fraco ou sem site)
+3. Redesenhar — páginas premium (leads com site) / Criar site — do zero (leads sem site)
 4. Publicar — Hostinger + capa de proposta
-5. Proposta — e-mail anti-spam
+5. Proposta — e-mail e WhatsApp anti-spam
 6. Respostas — monitora Gmail
-7. Follow-up — após 3+ dias
+7. Follow-up — após 3+ dias (e-mail e/ou WhatsApp)
 8. Contrato — HTML + DOCX
 
 ## Instalação rápida (Cursor)

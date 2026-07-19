@@ -1,8 +1,8 @@
-# Prospector de Sites — Cursor Skills v0.13.5
+# Prospector de Sites — Cursor Skills v0.15.0
 
-> Ciclo completo de prospecção e venda de sites para profissionais liberais com boa reputação no Google, mas site fraco.
+> Ciclo completo de prospecção e venda de sites para profissionais liberais com boa reputação no Google, mas site fraco (ou nenhum site).
 
-**Ciclo:** Achou → Refez → Publicou → Ofertou (+ respostas, follow-up, contrato)
+**Ciclo:** Achou → Refez (ou criou do zero) → Publicou → Ofertou (+ respostas, follow-up, contrato)
 
 ---
 
@@ -26,11 +26,12 @@ Reinicie o Cursor ou abra um novo chat.
 
 | Skill | Função |
 |-------|--------|
-| `prospector-de-sites` | Hub — orquestra os 9 workflows |
-| `prospeccao-maps` | Busca e qualificação no Google Maps |
-| `redesign-premium` | Redesign + editor + comparador |
+| `prospector-de-sites` | Hub — orquestra os 10 workflows |
+| `prospeccao-maps` | Busca e qualificação no Google Maps (site fraco ou sem site) |
+| `redesign-premium` | Redesign de site existente + editor + comparador |
+| `criacao-premium` | Site do zero (leads sem site) + editor + comparador |
 | `deploy-hostinger` | Publicação FTP/hPanel/publicador automático |
-| `proposta-email` | E-mail anti-spam com página-capa |
+| `proposta-email` | E-mail e WhatsApp anti-spam com página-capa |
 | `dashboard-leads` | CRM local (kanban, financeiro, contratos) |
 | `contrato-servico` | Contrato HTML + DOCX travado |
 
@@ -59,6 +60,7 @@ flowchart LR
 | Setup | `Rode o setup do prospector de sites` |
 | Prospectar | `Prospectar nutricionistas em Campinas` |
 | Redesenhar | `Redesenhar os 5 melhores leads` |
+| Criar site | `Criar o site dos leads sem site` |
 | Editor | `Abrir editor do cliente jessica-nutri` |
 | Publicar | `Publicar todos na Hostinger` |
 | Proposta | `Enviar proposta para os publicados` |
@@ -67,6 +69,12 @@ flowchart LR
 | Contrato | `Gerar contrato do cliente fechado` |
 
 ---
+
+### Novidades v0.15.0
+
+- **Site do zero** (`criar-site` + skill `criacao-premium`) — leads sem site próprio agora viram cliente também, usando fotos e avaliações reais do perfil do Google Maps
+- **Proposta por WhatsApp** — além do e-mail, mensagem pronta no WhatsApp Web (você revisa e clica em enviar)
+- **Dashboard CRM** (`prospector.db` + kanban + financeiro + contratos), agora com coluna `tipo` (redesign/criação) e `whatsappProposta`
 
 ### Novidades v0.13.5
 
@@ -109,7 +117,7 @@ novo → redesenhado → publicado → proposta → respondeu → fechado
 
 ## Requisitos
 
-- [ ] MCP **cursor-ide-browser**
+- [ ] MCP **cursor-ide-browser** (Maps, deploy e WhatsApp Web)
 - [ ] **Hostinger** com hPanel/FTP
 - [ ] **Gmail** para rascunhos
 - [ ] **Python** (dashboard + contrato)

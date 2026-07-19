@@ -229,14 +229,15 @@ function acoes(l){var a=[];
  if(l.siteAntigo)a.push('<a href="'+l.siteAntigo+'" target="_blank">antigo</a>');
  if(l.slug&&['redesenhado','publicado','proposta','respondeu','fechado'].indexOf(l.status)>=0){a.push('<a href="sites/'+l.slug+'/'+l.slug+'.html" target="_blank">página</a>');a.push('<a href="sites/'+l.slug+'/'+l.slug+'-editor.html" target="_blank">editar site</a>')}
  if(l.urlNova)a.push('<a href="'+l.urlNova+'" target="_blank">no ar ↗</a>');
- if(l.whatsapp)a.push('<a href="https://wa.me/'+l.whatsapp+'" target="_blank">whatsapp</a>');
+ if(l.whatsapp)a.push('<a href="https://wa.me/'+l.whatsapp+'" target="_blank">whatsapp'+(l.whatsappProposta?' ✓':'')+'</a>');
  if(l.email&&l.email.indexOf('@')>0)a.push('<a href="mailto:'+l.email+'">e-mail</a>');
  a.push('<a href="#" onclick="abrirEdit(\''+l.slug+'\');return false">✎ dados</a>');
  a.push('<a href="#" class="del" onclick="deletar(\''+l.slug+'\');return false">✕ excluir</a>');
  return '<div class="acoes">'+a.join('')+'</div>'}
 
 function card(l){var f=l.status==='proposta'&&dias(l.dataProposta)>=4?'<span class="tag fup">follow-up '+dias(l.dataProposta)+'d</span>':'';
- return '<div class="card" draggable="true" ondragstart="dragIni(event,\''+l.slug+'\')" ondragend="dragFim(event)" style="--cor:'+CORES[l.status]+'"><div class="nm">'+l.nome+f+'</div><div class="mt">'+(l.nota?'★ '+l.nota+' ('+l.avaliacoes+')':'')+(l.cidade?' · '+l.cidade:'')+'</div>'+(l.motivo?'<div class="motivo">'+l.motivo+'</div>':'')+(l.obs?'<div class="mt">'+l.obs+'</div>':'')+(l.valor?'<div class="valor">R$ '+l.valor.toLocaleString('pt-BR')+(l.manutencao?' <span style="color:var(--muted);font-weight:600;font-size:11px">+ R$ '+l.manutencao.toLocaleString('pt-BR')+'/mês</span>':'')+'</div>':'')+acoes(l)+'</div>'}
+ var t=l.tipo==='criacao'?'<span class="tag" style="background:#eef;color:#446">site novo</span>':'';
+ return '<div class="card" draggable="true" ondragstart="dragIni(event,\''+l.slug+'\')" ondragend="dragFim(event)" style="--cor:'+CORES[l.status]+'"><div class="nm">'+l.nome+t+f+'</div><div class="mt">'+(l.nota?'★ '+l.nota+' ('+l.avaliacoes+')':'')+(l.cidade?' · '+l.cidade:'')+'</div>'+(l.motivo?'<div class="motivo">'+l.motivo+'</div>':'')+(l.obs?'<div class="mt">'+l.obs+'</div>':'')+(l.valor?'<div class="valor">R$ '+l.valor.toLocaleString('pt-BR')+(l.manutencao?' <span style="color:var(--muted);font-weight:600;font-size:11px">+ R$ '+l.manutencao.toLocaleString('pt-BR')+'/mês</span>':'')+'</div>':'')+acoes(l)+'</div>'}
 function vGeral(){
  var ls=fil(),at=ativos();
  var props=ls.filter(function(l){return l.status==='proposta'});

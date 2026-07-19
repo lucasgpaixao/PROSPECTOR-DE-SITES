@@ -31,8 +31,8 @@
 <body>
 <div class="wrap">
   <h1>📘 Manual — Prospector de Sites</h1>
-  <div class="versao">Versão 0.12.0</div>
-  <p>Este plugin acha clientes com sites ruins no Google Maps, refaz as páginas com padrão profissional, publica na sua hospedagem e envia a proposta — e você administra tudo num painel (CRM) que roda no seu computador, de graça.</p>
+  <div class="versao">Versão 0.15.0</div>
+  <p>Este plugin acha clientes com sites ruins (ou sem site nenhum) no Google Maps, refaz as páginas — ou cria do zero, quando o cliente não tem site — com padrão profissional, publica na sua hospedagem e envia a proposta por e-mail e WhatsApp — e você administra tudo num painel (CRM) que roda no seu computador, de graça.</p>
 
   <div class="toc">
     <b>Neste manual:</b><br>
@@ -47,7 +47,7 @@
   <h2 id="requisitos">1. O que você precisa antes</h2>
   <ul>
     <li><b>Claude Cowork</b> (app do Claude pra desktop) com este plugin instalado.</li>
-    <li><b>Extensão Claude in Chrome</b> conectada — é ela que navega no Google Maps.</li>
+    <li><b>Extensão Claude in Chrome</b> conectada — é ela que navega no Google Maps e no WhatsApp Web para deixar as propostas prontas (na primeira vez, você escaneia o QR code do seu WhatsApp).</li>
     <li><b>Conector do Gmail</b> ativo (Configurações → Conectores) — rascunhos de proposta e leitura de respostas.</li>
     <li><b>Conector do Google Drive</b> — planilha de leads no Google Sheets.</li>
     <li><b>Hospedagem Hostinger</b> (plano Single ou superior, que aceita vários sites) com os dados do hPanel em mãos: usuário, domínio e servidor (aparecem na tela inicial do hPanel, coluna "General Information").</li>
@@ -62,19 +62,20 @@
   </ol>
   <div class="box dica">💡 Preencha também seus dados de contratante na aba <b>Configurações</b> do dashboard — todo contrato já sai com eles.</div>
 
-  <h2 id="ciclo">3. O ciclo completo (6 passos + 3 automáticos)</h2>
+  <h2 id="ciclo">3. O ciclo completo (7 passos + 3 automáticos)</h2>
   <table>
     <tr><th>Comando</th><th>O que faz</th></tr>
-    <tr><td><span class="cmd">/prospectar</span></td><td>Varre o Google Maps: negócios nota ≥ 4.7 com site fraco E e-mail público. Gera planilha no Google Sheets + alimenta o dashboard.</td></tr>
-    <tr><td><span class="cmd">/redesenhar</span></td><td>Recria as páginas dos melhores leads (5+ por lote) mantendo conteúdo, fotos e logo REAIS. Entrega: página + editor visual + comparador antes/depois.</td></tr>
+    <tr><td><span class="cmd">/prospectar</span></td><td>Varre o Google Maps: negócios nota ≥ 4.7 com site fraco OU sem site, com e-mail público. Marca cada lead como "redesign" ou "criação". Gera planilha no Google Sheets + alimenta o dashboard.</td></tr>
+    <tr><td><span class="cmd">/redesenhar</span></td><td>Recria as páginas dos melhores leads COM SITE (5+ por lote) mantendo conteúdo, fotos e logo REAIS. Entrega: página + editor visual + comparador antes/depois.</td></tr>
+    <tr><td><span class="cmd">/criar-site</span></td><td>Cria do zero as páginas dos leads SEM SITE (5+ por lote), usando fotos e avaliações reais do perfil do Google Maps. Mesma entrega do /redesenhar: página + editor visual + comparador.</td></tr>
     <tr><td><span class="cmd">/editor</span></td><td>Quer mexer em texto ou foto? Abre a versão editável no navegador — clica, edita, exporta.</td></tr>
     <tr><td><span class="cmd">/publicar</span></td><td>Sobe página + capa de apresentação na Hostinger e valida o HTTPS (cadeado).</td></tr>
-    <tr><td><span class="cmd">/proposta</span></td><td>Escreve o e-mail (elogio real + defeito objetivo + link da capa), passa na checklist anti-spam e deixa o rascunho no Gmail.</td></tr>
-    <tr><td><span class="cmd">/respostas</span></td><td>Lê o Gmail e move sozinho no painel quem respondeu. Dica: peça pro Claude agendar todo dia às 9h.</td></tr>
-    <tr><td><span class="cmd">/followup</span></td><td>3+ dias sem resposta? Gera o lembrete gentil (1 por cliente, nunca repete).</td></tr>
+    <tr><td><span class="cmd">/proposta</span></td><td>Escreve a proposta (elogio real + defeito/oportunidade + link da capa) e manda pelos dois canais: e-mail (checklist anti-spam + rascunho no Gmail) e WhatsApp (mensagem pronta no WhatsApp Web — você revisa e clica em enviar).</td></tr>
+    <tr><td><span class="cmd">/respostas</span></td><td>Lê o Gmail e move sozinho no painel quem respondeu por e-mail. Dica: peça pro Claude agendar todo dia às 9h. Respostas por WhatsApp você confere direto e avisa o Claude.</td></tr>
+    <tr><td><span class="cmd">/followup</span></td><td>3+ dias sem resposta em nenhum canal? Gera o lembrete gentil por e-mail e/ou WhatsApp (1 por cliente, nunca repete).</td></tr>
     <tr><td><span class="cmd">/contrato</span></td><td>Fechou? Gera o contrato em folha imprimível + Word travado (cliente só preenche onde você deixou) e o rascunho no Gmail.</td></tr>
   </table>
-  <div class="box aviso">⚠️ A regra de ouro do redesign: <b>nada é inventado</b>. Serviços, credenciais e fotos vêm do site real do cliente. O texto é reescrito com técnica — dizendo a mesma verdade.</div>
+  <div class="box aviso">⚠️ A regra de ouro, redesign ou criação: <b>nada é inventado</b>. Serviços, credenciais e fotos vêm do site real do cliente (redesign) ou do perfil dele no Google Maps (criação, quando não há site). O texto é sempre reescrito com técnica — dizendo a mesma verdade.</div>
 
   <h2 id="publicacao">4. Publicação automática — configure UMA vez e nunca mais faça login</h2>
   <p>O segredo é a senha no arquivo (passo 2 acima). Com ela preenchida:</p>
@@ -109,12 +110,14 @@
   <p>Você está usando o subdomínio temporário da Hostinger. Ative seu domínio próprio (grátis no plano — hPanel → Domains) e atualize o campo domínio nas Configurações do dashboard. Link bonito = cliente confiante; o plugin segura as propostas enquanto o domínio for o temporário.</p>
   <h3>Meu e-mail pode cair no spam?</h3>
   <p>A checklist anti-spam do /proposta existe pra isso: 1 link só, sem palavras de vendedor, sem anexo, assunto-pergunta personalizado, envio 1 a 1 da sua conta. Mantenha poucos envios por dia — padrão humano.</p>
+  <h3>Como funciona o envio por WhatsApp?</h3>
+  <p>O Claude abre o WhatsApp Web pelo Claude in Chrome, escreve a mensagem (mais curta que o e-mail) e deixa pronta no campo de texto da conversa — <b>ele não clica em enviar sozinho</b>, você revisa e aperta enviar. Na primeira vez, o WhatsApp Web pede pra escanear o QR code com seu celular (Configurações → Aparelhos conectados no app do WhatsApp).</p>
   <h3>O lado "Antes" do comparador fica em branco</h3>
   <p>Alguns sites antigos bloqueiam visualização embutida. Use o link "abrir ↗" no cabeçalho da coluna.</p>
   <h3>O dashboard diz "modo arquivo"</h3>
   <p>Você abriu o <code>dashboard.html</code> direto. Pra salvar no banco, abra pelo <code>iniciar-dashboard.bat</code> (requer Python: <code>python.org/downloads</code>, marque "Add to PATH").</p>
   <h3>Lead sem e-mail?</h3>
-  <p>O plugin descarta e busca outro — proposta vai por e-mail. Pros descartados com WhatsApp, peça o texto adaptado pro zap.</p>
+  <p>O plugin descarta e busca outro — e-mail é obrigatório pra fechar o ciclo. O WhatsApp sempre é capturado junto e usado como segundo canal na proposta (não substitui o e-mail).</p>
 
   <p style="margin-top:34px;color:var(--muted);font-size:13px">Prospector de Sites · por Lucas Paixão (@helioarreche) · Este manual acompanha o plugin e é atualizado a cada versão.</p>
 </div>

@@ -1,19 +1,20 @@
 ---
 name: prospector-de-sites
 description: >-
-  Prospecção semi-automática de clientes com sites ruins: acha negócios no
-  Google Maps, redesenha páginas premium, publica na Hostinger, envia proposta
-  anti-spam, acompanha respostas, follow-up e contrato. Use quando o usuário
-  disser "prospector", "prospectar", "redesenhar", "publicar", "proposta",
-  "respostas", "followup", "contrato", "dashboard" ou o ciclo achou → refez →
-  publicou → ofertou.
+  Prospecção semi-automática de clientes com sites ruins ou sem site: acha
+  negócios no Google Maps, redesenha páginas premium ou cria sites do zero,
+  publica na Hostinger, envia proposta anti-spam por e-mail e WhatsApp,
+  acompanha respostas, follow-up e contrato. Use quando o usuário disser
+  "prospector", "prospectar", "redesenhar", "criar site", "publicar",
+  "proposta", "whatsapp", "respostas", "followup", "contrato", "dashboard" ou
+  o ciclo achou → refez → publicou → ofertou.
 ---
 
-# Prospector de Sites (Cursor) v0.13.5
+# Prospector de Sites (Cursor) v0.15.0
 
 Ciclo completo de prospecção e venda de sites:
 
-**Achou → Refez → Publicou → Ofertou** (+ respostas, follow-up, contrato)
+**Achou → Refez (ou criou do zero) → Publicou → Ofertou** (+ respostas, follow-up, contrato)
 
 ## Como invocar
 
@@ -22,6 +23,7 @@ Ciclo completo de prospecção e venda de sites:
 | Setup (1x) | "Rode o setup do prospector de sites" |
 | Prospectar | "Prospectar nutricionistas em Campinas" |
 | Redesenhar | "Redesenhar os 5 melhores leads" |
+| Criar site | "Criar o site dos leads sem site" |
 | Editor | "Abrir editor do cliente jessica-nutri" |
 | Publicar | "Publicar todos os sites na Hostinger" |
 | Proposta | "Enviar proposta para os publicados" |
@@ -58,10 +60,11 @@ prospector-data/
 
 | Skill | Função |
 |-------|--------|
-| `prospeccao-maps` | Busca no Google Maps |
-| `redesign-premium` | Redesign + editor + comparador |
+| `prospeccao-maps` | Busca no Google Maps (site fraco ou sem site) |
+| `redesign-premium` | Redesign de site existente + editor + comparador |
+| `criacao-premium` | Site do zero (leads sem site) + editor + comparador |
 | `deploy-hostinger` | Publicação FTP/hPanel/publicador |
-| `proposta-email` | E-mail anti-spam com capa |
+| `proposta-email` | E-mail e WhatsApp anti-spam com capa |
 | `dashboard-leads` | CRM local (kanban, financeiro, contratos) |
 | `contrato-servico` | Contrato HTML + DOCX |
 
@@ -69,10 +72,11 @@ prospector-data/
 
 1. [setup](workflows/setup.md) → `dashboard-leads` + `deploy-hostinger`
 2. [prospectar](workflows/prospectar.md) → `prospeccao-maps` + `dashboard-leads`
-3. [redesenhar](workflows/redesenhar.md) → `redesign-premium`
+3. [redesenhar](workflows/redesenhar.md) → `redesign-premium` (leads com site)
+3b. [criar-site](workflows/criar-site.md) → `criacao-premium` (leads sem site)
 4. [editor](workflows/editor.md) → `redesign-premium`
 5. [publicar](workflows/publicar.md) → `deploy-hostinger` + `proposta-email`
-6. [proposta](workflows/proposta.md) → `proposta-email`
+6. [proposta](workflows/proposta.md) → `proposta-email` (e-mail + WhatsApp)
 7. [respostas](workflows/respostas.md) → `dashboard-leads`
 8. [followup](workflows/followup.md) → `proposta-email`
 9. [contrato](workflows/contrato.md) → `contrato-servico`
@@ -83,6 +87,7 @@ prospector-data/
 |--------|--------|
 | Claude in Chrome | MCP `cursor-ide-browser` |
 | Conector Gmail | Gmail via browser |
+| WhatsApp Web | MCP `cursor-ide-browser` (mensagem pronta, você clica em enviar) |
 | Google Sheets | `leads.csv` + import manual |
 | Pasta Cowork | `prospector-data/` |
 
